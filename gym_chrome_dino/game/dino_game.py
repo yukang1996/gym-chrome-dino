@@ -8,7 +8,8 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-
+from selenium.common.exceptions import WebDriverException
+git 
 from gym_chrome_dino.utils.helpers import download_chromedriver
 
 class DinoGame():
@@ -24,8 +25,16 @@ class DinoGame():
         if not render:
             options.add_argument('--headless')
         self.driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
-        # self.driver.get('chrome://dino')
-        self.driver.get('https://elvisyjlin.github.io/t-rex-runner/')
+        
+        # Get Dino URL to render according to ENV Variable DINO_PATH
+
+        dino_url = str(os.environ.get("DINO_URL", "chrome://dino"))
+
+        try:
+            self.driver.get(dino_url)
+        except WebDriverException:
+            pass
+
         self.defaults = self.get_parameters()  # default parameters
         if not accelerate:
             self.set_parameter('config.ACCELERATION', 0)
@@ -74,7 +83,31 @@ class DinoGame():
     def get_score(self):
         digits = self.driver.execute_script('return Runner.instance_.distanceMeter.digits;');
         return int(''.join(digits))
+
+    def get_dino_x_position(self):
+        print(self.driver.execute_script('return Runner.instance_.tRex.xPos;'))
+        return self.driver.execute_script('return Runner.instance_.tRex.xPos;');
     
+    def get_dino_y_position(self):
+        return self.driver.execute_script('return Runner.instance_.tRex.yPos;');
+
+    def get_nearest_obstacle_width(self):
+        return self.driver.execute_script('return Runner.instance_.horizon.obstacles.length ? Runner.instance_.horizon.obstacles[0].typeConfig.width : 0');
+    
+    def get_nearest_obstacle_height(self):
+        return self.driver.execute_script('return Runner.instance_.horizon.obstacles.length ? Runner.instance_.horizon.obstacles[0].typeConfig.height : 0');
+
+    def get_nearest_obstacle_horizontal_distance(self):
+        t_nearest_obstacle = self.driver.execute_script('return Runner.instance_.horizon.obstacles.length ? Runner.instance_.horizon.obstacles[0].xPos : 0');
+        return t_nearest_obstacle - self.get_dino_x_position();
+    
+    def get_nearest_obstacle_vertical_distance(self):
+        t_nearest_obstacle = self.driver.execute_script('return Runner.instance_.horizon.obstacles.length ? Runner.instance_.horizon.obstacles[0].yPos : 0');
+        return t_nearest_obstacle - self.get_dino_y_position();
+
+    def get_speed(self):
+        return self.driver.execute_script('return Runner.instance_.currentSpeed;')
+
     def get_canvas(self):
         return self.driver.execute_script('return document.getElementsByClassName("runner-canvas")[0].toDataURL().substring(22);')
     
