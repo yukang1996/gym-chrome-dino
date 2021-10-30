@@ -85,7 +85,6 @@ class DinoGame():
         return int(''.join(digits))
 
     def get_dino_x_position(self):
-        print(self.driver.execute_script('return Runner.instance_.tRex.xPos;'))
         return self.driver.execute_script('return Runner.instance_.tRex.xPos;');
     
     def get_dino_y_position(self):
