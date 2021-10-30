@@ -13,6 +13,18 @@ register(
 )
 
 register(
+    id='ChromeDinoGA-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
+    kwargs={'render': True, 'accelerate': False, 'autoscale': False}
+)
+
+register(
+    id='ChromeDinoGANoBrowser-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
+    kwargs={'render': False, 'accelerate': False, 'autoscale': False}
+)
+
+register(
     id='ChromeDinoNoBrowser-v0', 
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv', 
     kwargs={'render': False, 'accelerate': False, 'autoscale': False}

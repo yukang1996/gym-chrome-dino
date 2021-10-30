@@ -97,12 +97,12 @@ class DinoGame():
     def get_nearest_obstacle_height(self):
         return self.driver.execute_script('return Runner.instance_.horizon.obstacles.length ? Runner.instance_.horizon.obstacles[0].typeConfig.height : 0');
 
-    def get_nearest_obstacle_horizontal_distance(self):
-        t_nearest_obstacle = self.driver.execute_script('return Runner.instance_.horizon.obstacles.length ? Runner.instance_.horizon.obstacles[0].xPos : 0');
+    def get_nearest_obstacle_x_distance(self):
+        t_nearest_obstacle = self.driver.execute_script('return Runner.instance_.horizon.obstacles.length ? Runner.instance_.horizon.obstacles[0].xPos : 600');
         return t_nearest_obstacle - self.get_dino_x_position();
     
-    def get_nearest_obstacle_vertical_distance(self):
-        t_nearest_obstacle = self.driver.execute_script('return Runner.instance_.horizon.obstacles.length ? Runner.instance_.horizon.obstacles[0].yPos : 0');
+    def get_nearest_obstacle_y_distance(self):
+        t_nearest_obstacle = self.driver.execute_script('return Runner.instance_.horizon.obstacles.length ? Runner.instance_.horizon.obstacles[0].yPos : 150');
         return t_nearest_obstacle - self.get_dino_y_position();
 
     def get_speed(self):
