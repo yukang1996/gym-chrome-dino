@@ -144,12 +144,13 @@ class ChromeDinoGAEnv(gym.Env):
         if action == 3:
             self.game.press_space()
         observation = self._observe()
-        reward = self.gametime_reward
+        # reward = self.gametime_reward
         done = False
         info = {}
         if self.game.is_crashed():
-            reward = self.gameover_penalty
+            # reward = self.gameover_penalty
             done = True
+        reward = self.game.get_score()
         return observation, reward, done, info
 
     def reset(self, record=False):
