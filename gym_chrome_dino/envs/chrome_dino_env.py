@@ -6,14 +6,12 @@
 
 import base64
 import io
-import numpy as np
-import os
-from collections import deque
-from PIL import Image
+import sys
 
 import gym
-from gym import error, spaces, utils
-from gym.utils import seeding
+import numpy as np
+from PIL import Image
+from gym import spaces
 
 from gym_chrome_dino.game import DinoGame
 from gym_chrome_dino.utils.helpers import rgba2rgb
@@ -92,45 +90,58 @@ class ChromeDinoGAEnv(gym.Env):
         """
             Limits of observation space:
             
-            obstacle_x_distance => [-20, 600]
-            obstacle_y_distance => [-20, 150]
             dino_position_x => [0, 600]
             dino_position_y => [0, 150]
-            next_obstacle_width => [0, 200]
-            next_obstacle_height => [0, 100]
-            speed => [0, 100]
+            1st_obstacle_x_distance => [-20, 600]
+            1st_obstacle_y_distance => [-20, 150]
+            1st_obstacle_width => [0, 200]
+            1st_obstacle_height => [0, 100]
+            2nd_obstacle_x_distance => [-20, 600]
+            2nd_obstacle_y_distance => [-20, 150]
+            2nd_obstacle_width => [0, 200]
+            2nd_obstacle_height => [0, 100]
+            speed => [0, max]
             
         """
 
         self.observation_space = spaces.Box(
-            low=np.array([-20.0, -20.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-            high=np.array([600.0, 150.0, 600.0, 150.0, 200.0, 100.0, 100.0]),
+            low=np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0]),
+            high=np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 200.0, 100.0, sys.float_info.max]),
             dtype=np.float32
         )
 
         self.action_space = spaces.Discrete(3)
         self.gametime_reward = 0.1
         self.gameover_penalty = -1
+        self.score_mode = 'penalization'
         self.current_frame = self.observation_space.low
         self._action_set = [0, 1, 2]
 
     def _observe(self):
 
-        obstacle_x_distance = float(self.game.get_nearest_obstacle_x_distance())
-        obstacle_y_distance = float(self.game.get_nearest_obstacle_y_distance())
         dino_position_x = float(self.game.get_dino_x_position())
         dino_position_y = float(self.game.get_dino_y_position())
-        next_obstacle_width = float(self.game.get_nearest_obstacle_width())
-        next_obstacle_height = float(self.game.get_nearest_obstacle_height())
+        first_obstacle_x_distance = float(self.game.get_nth_nearest_obstacle_x_distance(1))
+        first_obstacle_y_distance = float(self.game.get_nth_nearest_obstacle_y_distance(1))
+        first_obstacle_width = float(self.game.get_nth_nearest_obstacle_width(1))
+        first_obstacle_height = float(self.game.get_nth_nearest_obstacle_height(1))
+        second_obstacle_x_distance = float(self.game.get_nth_nearest_obstacle_x_distance(1))
+        second_obstacle_y_distance = float(self.game.get_nth_nearest_obstacle_y_distance(1))
+        second_obstacle_width = float(self.game.get_nth_nearest_obstacle_width(1))
+        second_obstacle_height = float(self.game.get_nth_nearest_obstacle_height(1))
         speed = float(self.game.get_speed())
 
         self.current_frame = np.array([
-            obstacle_x_distance,
-            obstacle_y_distance,
             dino_position_x,
             dino_position_y,
-            next_obstacle_width,
-            next_obstacle_height,
+            first_obstacle_x_distance,
+            first_obstacle_y_distance,
+            first_obstacle_width,
+            first_obstacle_height,
+            second_obstacle_x_distance,
+            second_obstacle_y_distance,
+            second_obstacle_width,
+            second_obstacle_height,
             speed
         ])
 
@@ -144,11 +155,11 @@ class ChromeDinoGAEnv(gym.Env):
         if action == 3:
             self.game.press_space()
         observation = self._observe()
-        reward = self.gametime_reward
+        reward = self.gametime_reward if self.score_mode == 'penalization' else self.get_score()
         done = False
         info = {}
         if self.game.is_crashed():
-            reward = self.gameover_penalty
+            reward = self.gameover_penalty if self.score_mode == 'penalization' else reward
             done = True
         return observation, reward, done, info
 
@@ -174,6 +185,13 @@ class ChromeDinoGAEnv(gym.Env):
 
     def get_action_meanings(self):
         return [ACTION_MEANING[i] for i in self._action_set]
+
+    def set_score_mode(self, type):
+
+        if type == 'normal' or type == 'penalization':
+            self.score_mode = type
+        else:
+            raise Exception("Unsupported score mode, type: 'normal' or 'penalization'")
 
 
 ACTION_MEANING = {
