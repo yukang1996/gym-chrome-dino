@@ -9,13 +9,13 @@ from gym.envs.registration import register
 register(
     id='ChromeDino-v0', 
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv', 
-    kwargs={'render': True, 'accelerate': False, 'autoscale': False}
+    kwargs={'render': True, 'accelerate': True, 'autoscale': False}
 )
 
 register(
     id='ChromeDinoGA-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
-    kwargs={'render': True, 'accelerate': False, 'autoscale': False}
+    kwargs={'render': True, 'accelerate': True, 'autoscale': False}
 )
 
 register(

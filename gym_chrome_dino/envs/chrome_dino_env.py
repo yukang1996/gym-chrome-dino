@@ -6,7 +6,6 @@
 
 import base64
 import io
-import sys
 
 import gym
 import numpy as np
@@ -100,13 +99,13 @@ class ChromeDinoGAEnv(gym.Env):
             2nd_obstacle_y_distance => [-20, 150]
             2nd_obstacle_width => [0, 200]
             2nd_obstacle_height => [0, 100]
-            speed => [0, max]
+            speed => [0, 100]
             
         """
 
         self.observation_space = spaces.Box(
             low=np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0]),
-            high=np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 200.0, 100.0, sys.float_info.max]),
+            high=np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 200.0, 100.0, 100.0]),
             dtype=np.float32
         )
 
