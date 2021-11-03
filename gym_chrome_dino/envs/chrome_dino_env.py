@@ -14,6 +14,7 @@ from gym import spaces
 
 from gym_chrome_dino.game import DinoGame
 from gym_chrome_dino.utils.helpers import rgba2rgb
+from statistics import mean
 
 
 class ChromeDinoEnv(gym.Env):
@@ -83,66 +84,117 @@ class ChromeDinoEnv(gym.Env):
 class ChromeDinoGAEnv(gym.Env):
     metadata = {'render.modes': ['rgb_array'], 'video.frames_per_second': 10}
 
-    def __init__(self, render, accelerate, autoscale):
+    def __init__(self, render, accelerate, autoscale, input_mode):
+
         self.game = DinoGame(render, accelerate)
 
-        """
-            Limits of observation space:
-            
-            dino_position_x => [0, 600]
-            dino_position_y => [0, 150]
-            1st_obstacle_x_distance => [-20, 600]
-            1st_obstacle_y_distance => [-20, 150]
-            1st_obstacle_width => [0, 200]
-            1st_obstacle_height => [0, 100]
-            2nd_obstacle_x_distance => [-20, 600]
-            2nd_obstacle_y_distance => [-20, 150]
-            2nd_obstacle_width => [0, 200]
-            2nd_obstacle_height => [0, 100]
-            speed => [0, 100]
-            
-        """
+        if input_mode == 'one_obstacle':
 
-        self.observation_space = spaces.Box(
-            low=np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0]),
-            high=np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 200.0, 100.0, 100.0]),
-            dtype=np.float32
-        )
+            """
+                Limits of observation space:
+
+                dino_position_x => [0, 600]
+                dino_position_y => [0, 150]
+                1st_obstacle_x_distance => [-20, 600]
+                1st_obstacle_y_distance => [-20, 150]
+                1st_obstacle_width => [0, 200]
+                1st_obstacle_height => [0, 100]
+                speed => [0, 100]
+
+            """
+
+            self.observation_space = spaces.Box(
+                low=np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0]),
+                high=np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 100.0]),
+                dtype=np.float32
+            )
+
+        elif input_mode == 'two_obstacle':
+
+            """
+                Limits of observation space:
+    
+                dino_position_x => [0, 600]
+                dino_position_y => [0, 150]
+                1st_obstacle_x_distance => [-20, 600]
+                1st_obstacle_y_distance => [-20, 150]
+                1st_obstacle_width => [0, 200]
+                1st_obstacle_height => [0, 100]
+                2nd_obstacle_x_distance => [-20, 600]
+                2nd_obstacle_y_distance => [-20, 150]
+                2nd_obstacle_width => [0, 200]
+                2nd_obstacle_height => [0, 100]
+                speed => [0, 100]
+    
+            """
+
+            self.observation_space = spaces.Box(
+                low=np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0]),
+                high=np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 200.0, 100.0, 100.0]),
+                dtype=np.float32
+            )
+
+        else:
+
+            raise Exception("Unsupported input mode, type: 'one_obstacle' or 'two_obstacle'")
 
         self.action_space = spaces.Discrete(3)
         self.gametime_reward = 0.1
         self.gameover_penalty = -1
         self.score_mode = 'penalization'
+        self.input_mode = input_mode
         self.current_frame = self.observation_space.low
         self._action_set = [0, 1, 2]
 
     def _observe(self):
 
-        dino_position_x = float(self.game.get_dino_x_position())
-        dino_position_y = float(self.game.get_dino_y_position())
-        first_obstacle_x_distance = float(self.game.get_nth_nearest_obstacle_x_distance(1))
-        first_obstacle_y_distance = float(self.game.get_nth_nearest_obstacle_y_distance(1))
-        first_obstacle_width = float(self.game.get_nth_nearest_obstacle_width(1))
-        first_obstacle_height = float(self.game.get_nth_nearest_obstacle_height(1))
-        second_obstacle_x_distance = float(self.game.get_nth_nearest_obstacle_x_distance(1))
-        second_obstacle_y_distance = float(self.game.get_nth_nearest_obstacle_y_distance(1))
-        second_obstacle_width = float(self.game.get_nth_nearest_obstacle_width(1))
-        second_obstacle_height = float(self.game.get_nth_nearest_obstacle_height(1))
-        speed = float(self.game.get_speed())
+        if self.input_mode == 'one_obstacle':
 
-        self.current_frame = np.array([
-            dino_position_x,
-            dino_position_y,
-            first_obstacle_x_distance,
-            first_obstacle_y_distance,
-            first_obstacle_width,
-            first_obstacle_height,
-            second_obstacle_x_distance,
-            second_obstacle_y_distance,
-            second_obstacle_width,
-            second_obstacle_height,
-            speed
-        ])
+            dino_position_x = float(self.game.get_dino_x_position())
+            dino_position_y = float(self.game.get_dino_y_position())
+            first_obstacle_x_distance = float(self.game.get_nth_nearest_obstacle_x_distance(1))
+            first_obstacle_y_distance = float(self.game.get_nth_nearest_obstacle_y_distance(1))
+            first_obstacle_width = float(self.game.get_nth_nearest_obstacle_width(1))
+            first_obstacle_height = float(self.game.get_nth_nearest_obstacle_height(1))
+            speed = float(self.game.get_speed())
+
+            self.current_frame = np.array([
+                dino_position_x / mean([self.observation_space.low[0], self.observation_space.high[0]]),
+                dino_position_y / mean([self.observation_space.low[1], self.observation_space.high[1]]),
+                first_obstacle_x_distance / mean([self.observation_space.low[2], self.observation_space.high[2]]),
+                first_obstacle_y_distance / mean([self.observation_space.low[3], self.observation_space.high[3]]),
+                first_obstacle_width / mean([self.observation_space.low[4], self.observation_space.high[4]]),
+                first_obstacle_height / mean([self.observation_space.low[5], self.observation_space.high[5]]),
+                speed / mean([self.observation_space.low[6], self.observation_space.high[6]]),
+            ])
+
+        elif self.input_mode == 'two_obstacle':
+
+            dino_position_x = float(self.game.get_dino_x_position())
+            dino_position_y = float(self.game.get_dino_y_position())
+            first_obstacle_x_distance = float(self.game.get_nth_nearest_obstacle_x_distance(1))
+            first_obstacle_y_distance = float(self.game.get_nth_nearest_obstacle_y_distance(1))
+            first_obstacle_width = float(self.game.get_nth_nearest_obstacle_width(1))
+            first_obstacle_height = float(self.game.get_nth_nearest_obstacle_height(1))
+            second_obstacle_x_distance = float(self.game.get_nth_nearest_obstacle_x_distance(1))
+            second_obstacle_y_distance = float(self.game.get_nth_nearest_obstacle_y_distance(1))
+            second_obstacle_width = float(self.game.get_nth_nearest_obstacle_width(1))
+            second_obstacle_height = float(self.game.get_nth_nearest_obstacle_height(1))
+            speed = float(self.game.get_speed())
+
+            self.current_frame = np.array([
+                dino_position_x / mean([self.observation_space.low[0], self.observation_space.high[0]]),
+                dino_position_y / mean([self.observation_space.low[1], self.observation_space.high[1]]),
+                first_obstacle_x_distance / mean([self.observation_space.low[2], self.observation_space.high[2]]),
+                first_obstacle_y_distance / mean([self.observation_space.low[3], self.observation_space.high[3]]),
+                first_obstacle_width / mean([self.observation_space.low[4], self.observation_space.high[4]]),
+                first_obstacle_height / mean([self.observation_space.low[5], self.observation_space.high[5]]),
+                second_obstacle_x_distance/ mean([self.observation_space.low[6], self.observation_space.high[6]]),
+                second_obstacle_y_distance/ mean([self.observation_space.low[7], self.observation_space.high[7]]),
+                second_obstacle_width/ mean([self.observation_space.low[8], self.observation_space.high[8]]),
+                second_obstacle_height/ mean([self.observation_space.low[9], self.observation_space.high[9]]),
+                speed / mean([self.observation_space.low[10], self.observation_space.high[10]]),
+            ])
 
         return self.current_frame
 
