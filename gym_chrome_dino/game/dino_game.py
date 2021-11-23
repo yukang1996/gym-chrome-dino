@@ -24,7 +24,9 @@ class DinoGame:
         options.add_argument('--no-sandbox')
         options.add_argument('--window-size=800,600')
         if not render:
-            options.add_argument('--headless')
+            options.headless = True
+            # In headless mode, the default URL is having issues to load the JS, this one works
+            os.environ["DINO_URL"] = "https://chromedino.com/"
         self.driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
 
         # Get Dino URL to render according to ENV Variable DINO_PATH

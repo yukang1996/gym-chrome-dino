@@ -25,13 +25,20 @@ register(
 )
 
 register(
-    id='ChromeDinoGANoBrowser-v0',
-    entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
-    kwargs={'render': False, 'accelerate': False, 'autoscale': False, 'input_mode': 'one_obstacle'}
-)
-
-register(
     id='ChromeDinoNoBrowser-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
     kwargs={'render': False, 'accelerate': False, 'autoscale': False}
 )
+
+register(
+    id='ChromeDinoGAOneObstacleNoBrowser-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
+    kwargs={'render': False, 'accelerate': True, 'autoscale': False, 'input_mode': 'one_obstacle'}
+)
+
+register(
+    id='ChromeDinoGATwoObstacleNoBrowser-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
+    kwargs={'render': False, 'accelerate': True, 'autoscale': False, 'input_mode': 'two_obstacle'}
+)
+

@@ -21,7 +21,7 @@ from statistics import mean
 class ChromeDinoEnv(gym.Env):
     metadata = {'render.modes': ['rgb_array'], 'video.frames_per_second': 10}
 
-    def __init__(self, render, accelerate, autoscale):
+    def __init__(self, render, accelerate):
         self.game = DinoGame(render, accelerate)
         image_size = self._observe().shape
         self.observation_space = spaces.Box(
@@ -86,14 +86,15 @@ class ChromeDinoEnv(gym.Env):
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # RGB to Grey Scale
         image = image[:300, :500]  # Crop Region of Interest(ROI)
-        image = cv2.resize(image, (80, 80)) # Reduce the dimension
+        image = cv2.resize(image, (80, 80))  # Reduce the dimension
 
         return image
+
 
 class ChromeDinoGAEnv(gym.Env):
     metadata = {'render.modes': ['rgb_array'], 'video.frames_per_second': 10}
 
-    def __init__(self, render, accelerate, autoscale, input_mode):
+    def __init__(self, render, accelerate, input_mode):
 
         self.game = DinoGame(render, accelerate)
 
@@ -113,8 +114,8 @@ class ChromeDinoGAEnv(gym.Env):
             """
 
             self.observation_space = spaces.Box(
-                low=np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0]),
-                high=np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 100.0]),
+                low=np.array([np.float for n in [0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0]]),
+                high=np.array([np.float for n in [600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 100.0]]),
                 dtype=np.float32
             )
 
