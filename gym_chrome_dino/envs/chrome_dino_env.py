@@ -114,8 +114,8 @@ class ChromeDinoGAEnv(gym.Env):
             """
 
             self.observation_space = spaces.Box(
-                low=np.array([np.float for n in [0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0]]),
-                high=np.array([np.float for n in [600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 100.0]]),
+                low=np.float32(np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0])),
+                high=np.float32(np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 100.0])),
                 dtype=np.float32
             )
 
@@ -139,8 +139,8 @@ class ChromeDinoGAEnv(gym.Env):
             """
 
             self.observation_space = spaces.Box(
-                low=np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0]),
-                high=np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 200.0, 100.0, 100.0]),
+                low=np.float32(np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0])),
+                high=np.float32(np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 200.0, 100.0, 100.0])),
                 dtype=np.float32
             )
 
