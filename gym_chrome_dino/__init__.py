@@ -9,36 +9,36 @@ from gym.envs.registration import register
 register(
     id='ChromeDino-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
-    kwargs={'render': True, 'accelerate': True, 'autoscale': False}
+    kwargs={'render': True, 'accelerate': True}
 )
 
 register(
     id='ChromeDinoGAOneObstacle-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
-    kwargs={'render': True, 'accelerate': True, 'autoscale': False, 'input_mode': 'one_obstacle'}
+    kwargs={'render': True, 'accelerate': True, 'input_mode': 'one_obstacle'}
 )
 
 register(
     id='ChromeDinoGATwoObstacle-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
-    kwargs={'render': True, 'accelerate': True, 'autoscale': False, 'input_mode': 'two_obstacle'}
+    kwargs={'render': True, 'accelerate': True, 'input_mode': 'two_obstacle'}
 )
 
 register(
     id='ChromeDinoNoBrowser-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
-    kwargs={'render': False, 'accelerate': False, 'autoscale': False}
+    kwargs={'render': False, 'accelerate': False}
 )
 
 register(
     id='ChromeDinoGAOneObstacleNoBrowser-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
-    kwargs={'render': False, 'accelerate': True, 'autoscale': False, 'input_mode': 'one_obstacle'}
+    kwargs={'render': False, 'accelerate': True, 'input_mode': 'one_obstacle'}
 )
 
 register(
     id='ChromeDinoGATwoObstacleNoBrowser-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
-    kwargs={'render': False, 'accelerate': True, 'autoscale': False, 'input_mode': 'two_obstacle'}
+    kwargs={'render': False, 'accelerate': True, 'input_mode': 'two_obstacle'}
 )
 
