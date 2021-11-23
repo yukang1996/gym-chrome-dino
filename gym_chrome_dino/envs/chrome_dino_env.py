@@ -11,6 +11,7 @@ import gym
 import numpy as np
 from PIL import Image
 from gym import spaces
+import cv2  # opencv
 
 from gym_chrome_dino.game import DinoGame
 from gym_chrome_dino.utils.helpers import rgba2rgb
@@ -24,7 +25,7 @@ class ChromeDinoEnv(gym.Env):
         self.game = DinoGame(render, accelerate)
         image_size = self._observe().shape
         self.observation_space = spaces.Box(
-            low=0, high=255, shape=(150, 600, 3), dtype=np.uint8
+            low=0, high=255, shape=(80, 80), dtype=np.uint8
         )
         self.action_space = spaces.Discrete(2)
         self.gametime_reward = 0.1
@@ -38,7 +39,8 @@ class ChromeDinoEnv(gym.Env):
         i = Image.open(b)
         i = rgba2rgb(i)
         a = np.array(i)
-        self.current_frame = a
+        self.current_frame = self.process_img(a)
+
         return self.current_frame
 
     def step(self, action):
@@ -80,6 +82,13 @@ class ChromeDinoEnv(gym.Env):
     def get_action_meanings(self):
         return [ACTION_MEANING[i] for i in self._action_set]
 
+    def process_img(self, image):
+
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # RGB to Grey Scale
+        image = image[:300, :500]  # Crop Region of Interest(ROI)
+        image = cv2.resize(image, (80, 80)) # Reduce the dimension
+
+        return image
 
 class ChromeDinoGAEnv(gym.Env):
     metadata = {'render.modes': ['rgb_array'], 'video.frames_per_second': 10}
@@ -189,10 +198,10 @@ class ChromeDinoGAEnv(gym.Env):
                 first_obstacle_y_distance / mean([self.observation_space.low[3], self.observation_space.high[3]]),
                 first_obstacle_width / mean([self.observation_space.low[4], self.observation_space.high[4]]),
                 first_obstacle_height / mean([self.observation_space.low[5], self.observation_space.high[5]]),
-                second_obstacle_x_distance/ mean([self.observation_space.low[6], self.observation_space.high[6]]),
-                second_obstacle_y_distance/ mean([self.observation_space.low[7], self.observation_space.high[7]]),
-                second_obstacle_width/ mean([self.observation_space.low[8], self.observation_space.high[8]]),
-                second_obstacle_height/ mean([self.observation_space.low[9], self.observation_space.high[9]]),
+                second_obstacle_x_distance / mean([self.observation_space.low[6], self.observation_space.high[6]]),
+                second_obstacle_y_distance / mean([self.observation_space.low[7], self.observation_space.high[7]]),
+                second_obstacle_width / mean([self.observation_space.low[8], self.observation_space.high[8]]),
+                second_obstacle_height / mean([self.observation_space.low[9], self.observation_space.high[9]]),
                 speed / mean([self.observation_space.low[10], self.observation_space.high[10]]),
             ])
 
