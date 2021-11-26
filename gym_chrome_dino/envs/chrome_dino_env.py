@@ -25,7 +25,7 @@ class ChromeDinoEnv(gym.Env):
         self.game = DinoGame(render, accelerate)
         image_size = self._observe().shape
         self.observation_space = spaces.Box(
-            low=0, high=255, shape=(80, 80), dtype=np.uint8
+            low=0, high=1, shape=(80, 80), dtype=np.float_ # Alias for double
         )
         self.action_space = spaces.Discrete(2)
         self.gametime_reward = 0.1
@@ -88,7 +88,13 @@ class ChromeDinoEnv(gym.Env):
         image = image[:300, :500]  # Crop Region of Interest(ROI)
         image = cv2.resize(image, (80, 80))  # Reduce the dimension
 
-        return image
+        return image / 255 # The image should be normalized
+
+    def pause(self):
+        self.game.pause()
+
+    def resume(self):
+        self.game.resume()
 
 
 class ChromeDinoGAEnv(gym.Env):
