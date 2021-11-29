@@ -53,7 +53,9 @@ class ChromeDinoEnv(gym.Env):
         observation = self._observe()
         reward = self.gametime_reward
         done = False
-        info = {}
+        info = {
+            "score": self.get_score()
+        }
         if self.game.is_crashed():
             reward = self.gameover_penalty
             done = True
