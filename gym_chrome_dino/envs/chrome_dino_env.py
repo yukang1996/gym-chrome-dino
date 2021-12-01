@@ -62,6 +62,8 @@ class ChromeDinoEnv(gym.Env):
         if self.game.is_crashed():
             reward = self.gameover_penalty
             done = True
+            # Force restart of the environment to avoid sending unuseful information (the Game Over screen)
+            self.game.restart()
         return observation, reward, done, info
 
     def reset(self, record=False):
