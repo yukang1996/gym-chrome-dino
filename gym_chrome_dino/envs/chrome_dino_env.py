@@ -334,13 +334,13 @@ class ChromeDinoRLPoEnv(gym.Env):
 
             raise Exception("Unsupported input mode, type: 'one_obstacle' or 'two_obstacle'")
 
-        self.action_space = spaces.Discrete(3)
+        self.action_space = spaces.Discrete(2)
         self.gametime_reward = 0.1
         self.gameover_penalty = -50
         self.score_mode = 'penalization'
         self.input_mode = input_mode
         self.current_frame = self.observation_space.low
-        self._action_set = [0, 1, 2]
+        self._action_set = [0, 1]
 
     def _observe(self):
 
@@ -397,10 +397,10 @@ class ChromeDinoRLPoEnv(gym.Env):
     def step(self, action):
         if action == 1:
             self.game.press_up()
-        if action == 2:
-            self.game.press_down()
-        if action == 3:
-            self.game.press_space()
+        # if action == 2:
+        #     self.game.press_down()
+        # if action == 3:
+        #     self.game.press_space()
         observation = self._observe()
         reward = self.gametime_reward
         done = False
