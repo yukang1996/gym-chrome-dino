@@ -18,6 +18,15 @@ from gym_chrome_dino.utils.helpers import rgba2rgb
 from statistics import mean
 
 
+def process_img(image):
+
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # RGB to Grey Scale
+    image = image[:300, :500]  # Crop Region of Interest(ROI)
+    image = cv2.resize(image, (80, 80))  # Reduce the dimension
+
+    return image / 255  # The image should be normalized
+
+
 class ChromeDinoEnv(gym.Env):
     metadata = {'render.modes': ['rgb_array'], 'video.frames_per_second': 10}
 
@@ -25,7 +34,7 @@ class ChromeDinoEnv(gym.Env):
         self.game = DinoGame(render, accelerate)
         image_size = self._observe().shape
         self.observation_space = spaces.Box(
-            low=0, high=1, shape=(80, 80), dtype=np.float_ # Alias for double
+            low=0, high=1, shape=(80, 80), dtype=np.float_  # Alias for double
         )
         self.action_space = spaces.Discrete(2)
         self.gametime_reward = 1
@@ -39,7 +48,7 @@ class ChromeDinoEnv(gym.Env):
         i = Image.open(b)
         i = rgba2rgb(i)
         a = np.array(i)
-        self.current_frame = self.process_img(a)
+        self.current_frame = process_img(a)
 
         return self.current_frame
 
@@ -89,19 +98,17 @@ class ChromeDinoEnv(gym.Env):
     def get_action_meanings(self):
         return [ACTION_MEANING[i] for i in self._action_set]
 
-    def process_img(self, image):
-
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # RGB to Grey Scale
-        image = image[:300, :500]  # Crop Region of Interest(ROI)
-        image = cv2.resize(image, (80, 80))  # Reduce the dimension
-
-        return image / 255 # The image should be normalized
-
     def pause(self):
         self.game.pause()
 
     def resume(self):
         self.game.resume()
+
+    def set_gametime_reward(self, reward):
+        self.gametime_reward = reward
+
+    def set_gameover_penalty(self, penalty):
+        self.gameover_penalty = penalty
 
 
 class ChromeDinoGAEnv(gym.Env):
@@ -153,7 +160,8 @@ class ChromeDinoGAEnv(gym.Env):
 
             self.observation_space = spaces.Box(
                 low=np.float32(np.array([0.0, 0.0, -20.0, -20.0, 0.0, 0.0, -20.0, -20.0, 0.0, 0.0, 0.0])),
-                high=np.float32(np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 200.0, 100.0, 100.0])),
+                high=np.float32(
+                    np.array([600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 600.0, 150.0, 200.0, 100.0, 100.0])),
                 dtype=np.float32
             )
 
@@ -396,7 +404,10 @@ class ChromeDinoRLPoEnv(gym.Env):
         observation = self._observe()
         reward = self.gametime_reward
         done = False
-        info = {}
+        info = {
+            "score": self.get_score(),
+            "preview": self.get_preview()
+        }
         if self.game.is_crashed():
             reward = self.gameover_penalty
             done = True
@@ -431,6 +442,26 @@ class ChromeDinoRLPoEnv(gym.Env):
             self.score_mode = type
         else:
             raise Exception("Unsupported score mode, type: 'normal' or 'penalization'")
+
+    def pause(self):
+        self.game.pause()
+
+    def resume(self):
+        self.game.resume()
+
+    def set_gametime_reward(self, reward):
+        self.gametime_reward = reward
+
+    def set_gameover_penalty(self, penalty):
+        self.gameover_penalty = penalty
+
+    def get_preview(self):
+        s = self.game.get_canvas()
+        b = io.BytesIO(base64.b64decode(s))
+        i = Image.open(b)
+        i = rgba2rgb(i)
+        a = np.array(i)
+        return process_img(a)
 
 ACTION_MEANING = {
     0: "NOOP",

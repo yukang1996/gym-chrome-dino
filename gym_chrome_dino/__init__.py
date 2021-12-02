@@ -48,5 +48,23 @@ register(
     kwargs={'render': True, 'accelerate': True, 'input_mode': 'one_obstacle'}
 )
 
+register(
+    id='ChromeDinoRLPoNoBrowser-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoRLPoEnv',
+    kwargs={'render': False, 'accelerate': True, 'input_mode': 'one_obstacle'}
+)
+
+register(
+    id='ChromeDinoRLPoTwoObstacles-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoRLPoEnv',
+    kwargs={'render': True, 'accelerate': True, 'input_mode': 'two_obstacle'}
+)
+
+register(
+    id='ChromeDinoRLPoTwoObstaclesNoBrowser-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoRLPoEnv',
+    kwargs={'render': False, 'accelerate': True, 'input_mode': 'two_obstacle'}
+)
+
 
 
