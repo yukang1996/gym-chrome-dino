@@ -18,26 +18,37 @@ from gym_chrome_dino.utils.helpers import rgba2rgb
 from statistics import mean
 
 
-def process_img(image):
-
+def process_img(image, norm):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # RGB to Grey Scale
     image = image[:300, :500]  # Crop Region of Interest(ROI)
     image = cv2.resize(image, (80, 80))  # Reduce the dimension
 
-    return image / 255  # The image should be normalized
+    if norm:
+        return image / 255
+    else:
+        image = np.reshape(image, (80, 80, 1))
+        return image
 
 
 class ChromeDinoEnv(gym.Env):
     metadata = {'render.modes': ['rgb_array'], 'video.frames_per_second': 10}
 
-    def __init__(self, render, accelerate):
+    def __init__(self, render, accelerate, norm):
+
         self.game = DinoGame(render, accelerate)
-        image_size = self._observe().shape
-        self.observation_space = spaces.Box(
-            low=0, high=1, shape=(80, 80), dtype=np.float_  # Alias for double
-        )
+
+        if norm:
+            self.observation_space = spaces.Box(
+                low=0, high=1, shape=(80, 80), dtype=np.float_  # Alias for double
+            )
+        else:
+            self.observation_space = spaces.Box(
+                low=0, high=255, shape=(80, 80, 1), dtype=np.uint8
+            )
+
+        self.norm = norm
         self.action_space = spaces.Discrete(2)
-        self.gametime_reward = 1
+        self.gametime_reward = 0.1
         self.gameover_penalty = -1
         self.current_frame = self.observation_space.low
         self._action_set = [0, 1, 2]
@@ -48,7 +59,8 @@ class ChromeDinoEnv(gym.Env):
         i = Image.open(b)
         i = rgba2rgb(i)
         a = np.array(i)
-        self.current_frame = process_img(a)
+
+        self.current_frame = process_img(a, self.norm)
 
         return self.current_frame
 
@@ -397,10 +409,10 @@ class ChromeDinoRLPoEnv(gym.Env):
     def step(self, action):
         if action == 1:
             self.game.press_up()
-        # if action == 2:
-        #     self.game.press_down()
-        # if action == 3:
-        #     self.game.press_space()
+        if action == 2:
+            self.game.press_down()
+        if action == 3:
+            self.game.press_space()
         observation = self._observe()
         reward = self.gametime_reward
         done = False
@@ -461,7 +473,8 @@ class ChromeDinoRLPoEnv(gym.Env):
         i = Image.open(b)
         i = rgba2rgb(i)
         a = np.array(i)
-        return process_img(a)
+        return process_img(a, True)
+
 
 ACTION_MEANING = {
     0: "NOOP",

@@ -9,7 +9,25 @@ from gym.envs.registration import register
 register(
     id='ChromeDino-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
-    kwargs={'render': True, 'accelerate': True}
+    kwargs={'render': True, 'accelerate': True, 'norm': True}
+)
+
+register(
+    id='ChromeDinoNoBrowser-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
+    kwargs={'render': False, 'accelerate': False, 'norm': True}
+)
+
+register(
+    id='ChromeDinoNotNorm-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
+    kwargs={'render': True, 'accelerate': True, 'norm': False}
+)
+
+register(
+    id='ChromeDinoNotNormNoBrowser-v0',
+    entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
+    kwargs={'render': False, 'accelerate': False, 'norm': False}
 )
 
 register(
@@ -24,11 +42,6 @@ register(
     kwargs={'render': True, 'accelerate': True, 'input_mode': 'two_obstacle'}
 )
 
-register(
-    id='ChromeDinoNoBrowser-v0',
-    entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
-    kwargs={'render': False, 'accelerate': False}
-)
 
 register(
     id='ChromeDinoGAOneObstacleNoBrowser-v0',
