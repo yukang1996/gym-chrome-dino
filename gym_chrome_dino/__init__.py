@@ -15,7 +15,7 @@ register(
 register(
     id='ChromeDinoNoBrowser-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
-    kwargs={'render': False, 'accelerate': False, 'norm': True}
+    kwargs={'render': False, 'accelerate': True, 'norm': True}
 )
 
 register(
@@ -27,7 +27,7 @@ register(
 register(
     id='ChromeDinoNotNormNoBrowser-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
-    kwargs={'render': False, 'accelerate': False, 'norm': False}
+    kwargs={'render': False, 'accelerate': True, 'norm': False}
 )
 
 register(
@@ -45,7 +45,7 @@ register(
 register(
     id='ChromeDinoNoBrowser-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
-    kwargs={'render': False, 'accelerate': False}
+    kwargs={'render': False, 'accelerate': True}
 )
 
 register(

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1a97227f-0f51-42b6-9368-3556e50da554" name="Changes" comment="Re-enable acceleration in environment&#10;&#10;One acceleration was still disabled, re enabled it." />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="20DHZ9JY0w9AepiGRWSq2ZbTWZB" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ml701-project" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1a97227f-0f51-42b6-9368-3556e50da554" name="Changes" comment="" />
+      <created>1635572291248</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1635572291248</updated>
+      <workItem from="1635572302290" duration="6841000" />
+      <workItem from="1635679471953" duration="2656000" />
+      <workItem from="1635850455403" duration="9411000" />
+      <workItem from="1635938475929" duration="42000" />
+      <workItem from="1637518442077" duration="220000" />
+      <workItem from="1637562352084" duration="15883000" />
+      <workItem from="1637641548778" duration="13093000" />
+      <workItem from="1637735516681" duration="6003000" />
+      <workItem from="1637770507411" duration="4167000" />
+      <workItem from="1637864641859" duration="973000" />
+      <workItem from="1637869211756" duration="3526000" />
+      <workItem from="1638184546925" duration="1759000" />
+      <workItem from="1638953222364" duration="216000" />
+      <workItem from="1638955985472" duration="779000" />
+    </task>
+    <task id="LOCAL-00001" summary="Re-enable acceleration in environment&#10;&#10;One acceleration was still disabled, re enabled it.">
+      <created>1638956741516</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1638956741516</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Re-enable acceleration in environment&#10;&#10;One acceleration was still disabled, re enabled it." />
+    <option name="LAST_COMMIT_MESSAGE" value="Re-enable acceleration in environment&#10;&#10;One acceleration was still disabled, re enabled it." />
+  </component>
+</project>
