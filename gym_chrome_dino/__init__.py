@@ -27,7 +27,7 @@ register(
 register(
     id='ChromeDinoNoBrowser-v0',
     entry_point='gym_chrome_dino.envs:ChromeDinoEnv',
-    kwargs={'render': False, 'accelerate': False}
+    kwargs={'render': False, 'accelerate': True}
 )
 
 register(
@@ -41,4 +41,3 @@ register(
     entry_point='gym_chrome_dino.envs:ChromeDinoGAEnv',
     kwargs={'render': False, 'accelerate': True, 'input_mode': 'two_obstacle'}
 )
-
